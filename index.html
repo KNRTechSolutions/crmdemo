@@ -33,6 +33,7 @@
     --emp-stat-bg: rgba(10,22,40,0.5);
     --modal-bg: #112240;
     --login-bg: #0a1628;
+    --sidebar-w: 240px;
   }
 
   /* ── LIGHT MODE ── */
@@ -63,6 +64,7 @@
     --modal-bg: #ffffff;
     --login-bg: #f0f4f8;
   }
+
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'Sora',sans-serif; background:var(--navy); color:var(--text); min-height:100vh; overflow-x:hidden; transition:background 0.3s, color 0.3s; }
 
@@ -78,34 +80,22 @@
     font-family:'Sora',sans-serif; font-size:11px; font-weight:700;
     cursor:pointer; transition:all 0.25s; letter-spacing:0.3px;
   }
-  .theme-btn.dark-btn {
-    background: transparent; color:var(--text2);
-  }
-  .theme-btn.light-btn {
-    background: transparent; color:var(--text2);
-  }
-  body:not(.light) .theme-btn.dark-btn {
-    background:#0a1628; color:#c9a227;
-    box-shadow:0 2px 8px rgba(0,0,0,0.4);
-  }
-  body.light .theme-btn.light-btn {
-    background:#ffffff; color:#b8860b;
-    box-shadow:0 2px 8px rgba(0,0,0,0.15);
-  }
+  .theme-btn.dark-btn { background:transparent; color:var(--text2); }
+  .theme-btn.light-btn { background:transparent; color:var(--text2); }
+  body:not(.light) .theme-btn.dark-btn { background:#0a1628; color:#c9a227; box-shadow:0 2px 8px rgba(0,0,0,0.4); }
+  body.light .theme-btn.light-btn { background:#ffffff; color:#b8860b; box-shadow:0 2px 8px rgba(0,0,0,0.15); }
   body.light .theme-btn.dark-btn { color:#94a3b8; }
   body:not(.light) .theme-btn.light-btn { color:#94a3b8; }
-  
-  /* SIDEBAR */
+
+  /* ── SIDEBAR ── */
   #sidebar {
-    position:fixed; left:0; top:0; width:240px; height:100vh;
+    position:fixed; left:0; top:0; width:var(--sidebar-w); height:100vh;
     background:var(--navy2); border-right:1px solid var(--border);
     display:flex; flex-direction:column; z-index:100;
-    transition:transform 0.3s;
+    transition:transform 0.3s ease;
+    overflow-y:auto;
   }
-  .logo-area {
-    padding:24px 20px 20px;
-    border-bottom:1px solid var(--border);
-  }
+  .logo-area { padding:24px 20px 20px; border-bottom:1px solid var(--border); }
   .logo-area .brand { font-size:20px; font-weight:800; color:var(--gold); letter-spacing:1px; }
   .logo-area .sub { font-size:10px; color:var(--text2); letter-spacing:2px; text-transform:uppercase; margin-top:2px; }
   .nav-section { padding:12px 0; }
@@ -127,31 +117,47 @@
   .user-name { font-size:12px; font-weight:600; color:var(--text); }
   .user-role { font-size:10px; color:var(--gold); }
 
-  /* MAIN */
-  #main { margin-left:240px; min-height:100vh; }
-  
-  /* TOPBAR */
+  /* ── HAMBURGER ── */
+  .hamburger {
+    display:none; flex-direction:column; gap:5px; cursor:pointer;
+    padding:8px; border-radius:8px; border:1px solid var(--border);
+    background:none; flex-shrink:0;
+  }
+  .hamburger span { width:18px; height:2px; background:var(--text); border-radius:2px; transition:all 0.3s; display:block; }
+
+  /* Sidebar overlay */
+  .sidebar-overlay {
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+    z-index:99; backdrop-filter:blur(2px);
+  }
+  .sidebar-overlay.open { display:block; }
+
+  /* ── MAIN ── */
+  #main { margin-left:var(--sidebar-w); min-height:100vh; transition:margin-left 0.3s; }
+
+  /* ── TOPBAR ── */
   .topbar {
     background:var(--navy2); border-bottom:1px solid var(--border);
     padding:14px 28px; display:flex; align-items:center; justify-content:space-between;
-    position:sticky; top:0; z-index:50;
+    position:sticky; top:0; z-index:50; gap:12px; flex-wrap:wrap;
   }
+  .topbar-left { display:flex; align-items:center; gap:12px; }
   .topbar-title { font-size:18px; font-weight:700; color:var(--text); }
-  .topbar-right { display:flex; align-items:center; gap:16px; }
+  .topbar-right { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
   .topbar-btn { background:none; border:1px solid var(--border); color:var(--text2); padding:7px 14px; border-radius:8px; font-family:'Sora',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:6px; }
   .topbar-btn:hover { border-color:var(--gold); color:var(--gold); }
-  .btn-primary { background:var(--gold); border:none; color:var(--navy); font-weight:700; padding:8px 18px; border-radius:8px; font-family:'Sora',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s; }
+  .btn-primary { background:var(--gold); border:none; color:var(--navy); font-weight:700; padding:8px 18px; border-radius:8px; font-family:'Sora',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
   .btn-primary:hover { background:var(--gold2); transform:translateY(-1px); }
   .search-bar { display:flex; align-items:center; gap:8px; background:var(--input); border:1px solid var(--border); border-radius:8px; padding:7px 14px; }
-  .search-bar input { background:none; border:none; color:var(--text); font-family:'Sora',sans-serif; font-size:12px; outline:none; width:200px; }
+  .search-bar input { background:none; border:none; color:var(--text); font-family:'Sora',sans-serif; font-size:12px; outline:none; width:180px; }
   .search-bar input::placeholder { color:var(--text2); }
 
-  /* PAGE */
+  /* ── PAGE ── */
   .page { display:none; padding:24px 28px; animation:fadeIn 0.3s ease; }
   .page.active { display:block; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
-  /* STATS GRID */
+  /* ── STATS GRID ── */
   .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
   .stat-card {
     background:var(--card); border:1px solid var(--border); border-radius:12px;
@@ -178,21 +184,22 @@
   .stat-change.down { color:#f87171; }
   .stat-icon { position:absolute; right:16px; top:50%; transform:translateY(-50%); font-size:36px; opacity:0.12; }
 
-  /* CARDS */
+  /* ── CARDS ── */
   .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:20px; }
-  .card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
   .card-title { font-size:14px; font-weight:700; color:var(--text); }
   .card-subtitle { font-size:11px; color:var(--text2); margin-top:2px; }
 
-  /* TABLE */
-  table { width:100%; border-collapse:collapse; }
-  th { font-size:10px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:1px; padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
+  /* ── TABLE ── */
+  .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  table { width:100%; border-collapse:collapse; min-width:600px; }
+  th { font-size:10px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:1px; padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; }
   td { padding:12px 12px; font-size:12px; border-bottom:1px solid var(--td-border); vertical-align:middle; }
   tr:last-child td { border-bottom:none; }
   tr:hover td { background:var(--row-hover); }
 
-  /* BADGES */
-  .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:20px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+  /* ── BADGES ── */
+  .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:20px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; white-space:nowrap; }
   .badge-new { background:rgba(124,58,237,0.2); color:#a78bfa; border:1px solid rgba(124,58,237,0.3); }
   .badge-contacted { background:rgba(13,148,136,0.2); color:var(--teal2); border:1px solid rgba(13,148,136,0.3); }
   .badge-qualified { background:rgba(201,162,39,0.2); color:var(--gold2); border:1px solid rgba(201,162,39,0.3); }
@@ -204,13 +211,13 @@
   .badge-manager { background:rgba(124,58,237,0.2); color:#a78bfa; border:1px solid rgba(124,58,237,0.3); }
   .badge-agent { background:rgba(234,88,12,0.15); color:#fb923c; border:1px solid rgba(234,88,12,0.3); }
 
-  /* GRID LAYOUTS */
+  /* ── GRIDS ── */
   .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
   .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
 
-  /* PIPELINE */
-  .pipeline { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-bottom:24px; }
-  .pipeline-col { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px; min-height:300px; }
+  /* ── PIPELINE ── */
+  .pipeline { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-bottom:24px; overflow-x:auto; }
+  .pipeline-col { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px; min-height:300px; min-width:160px; }
   .pipeline-header { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
   .pipeline-card { background:var(--input); border:1px solid var(--border); border-radius:8px; padding:10px; margin-bottom:8px; cursor:pointer; transition:all 0.2s; }
   .pipeline-card:hover { border-color:var(--gold); transform:translateY(-2px); }
@@ -218,21 +225,21 @@
   .pipeline-card .meta { font-size:10px; color:var(--text2); margin-top:3px; }
   .pipeline-card .course { font-size:10px; color:var(--teal2); margin-top:3px; }
 
-  /* CHART BAR */
+  /* ── MINI BAR CHART ── */
   .mini-bar { display:flex; align-items:flex-end; gap:6px; height:80px; }
   .bar-item { flex:1; background:linear-gradient(to top,var(--gold),var(--teal2)); border-radius:4px 4px 0 0; transition:all 0.3s; cursor:pointer; min-width:12px; }
   .bar-item:hover { filter:brightness(1.2); }
   .bar-labels { display:flex; gap:6px; margin-top:4px; }
   .bar-label { flex:1; text-align:center; font-size:8px; color:var(--text2); }
 
-  /* DONUT CHART */
-  .donut-wrap { display:flex; align-items:center; gap:20px; }
+  /* ── DONUT CHART ── */
+  .donut-wrap { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
   .donut-svg { flex-shrink:0; }
-  .donut-legend { display:flex; flex-direction:column; gap:8px; }
+  .donut-legend { display:flex; flex-direction:column; gap:8px; flex:1; min-width:140px; }
   .donut-item { display:flex; align-items:center; gap:8px; font-size:11px; }
-  .donut-dot { width:8px; height:8px; border-radius:50%; }
+  .donut-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 
-  /* ACTIVITY FEED */
+  /* ── ACTIVITY FEED ── */
   .activity-item { display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--td-border); }
   .activity-item:last-child { border-bottom:none; }
   .activity-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; margin-top:2px; }
@@ -243,7 +250,7 @@
   .activity-text { font-size:12px; line-height:1.5; }
   .activity-time { font-size:10px; color:var(--text2); margin-top:2px; font-family:'JetBrains Mono',monospace; }
 
-  /* FORM ELEMENTS */
+  /* ── FORM ELEMENTS ── */
   .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   .form-group { margin-bottom:16px; }
   .form-group label { display:block; font-size:11px; font-weight:600; color:var(--text2); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px; }
@@ -256,50 +263,51 @@
   .form-group select option { background:var(--navy2); }
   .form-group textarea { resize:vertical; min-height:80px; }
 
-  /* MODAL */
-  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:200; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+  /* ── MODAL ── */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:200; align-items:center; justify-content:center; backdrop-filter:blur(4px); padding:16px; }
   .modal-overlay.open { display:flex; }
-  .modal { background:var(--modal-bg); border:1px solid var(--border); border-radius:16px; width:600px; max-width:95vw; max-height:90vh; overflow-y:auto; box-shadow:var(--shadow); }
-  .modal-header { padding:20px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .modal { background:var(--modal-bg); border:1px solid var(--border); border-radius:16px; width:600px; max-width:100%; max-height:90vh; overflow-y:auto; box-shadow:var(--shadow); }
+  .modal-header { padding:20px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px; }
   .modal-title { font-size:16px; font-weight:700; }
-  .modal-close { background:none; border:none; color:var(--text2); cursor:pointer; font-size:20px; padding:4px; }
+  .modal-close { background:none; border:none; color:var(--text2); cursor:pointer; font-size:20px; padding:4px; flex-shrink:0; }
   .modal-close:hover { color:var(--text); }
   .modal-body { padding:24px; }
-  .modal-footer { padding:16px 24px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:12px; }
+  .modal-footer { padding:16px 24px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:12px; flex-wrap:wrap; }
   .btn-secondary { background:none; border:1px solid var(--border); color:var(--text2); padding:8px 18px; border-radius:8px; font-family:'Sora',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s; }
   .btn-secondary:hover { border-color:var(--text); color:var(--text); }
 
-  /* TABS */
-  .tabs { display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:20px; }
-  .tab { padding:10px 18px; font-size:12px; font-weight:600; color:var(--text2); cursor:pointer; border-bottom:2px solid transparent; transition:all 0.2s; }
+  /* ── TABS ── */
+  .tabs { display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:20px; overflow-x:auto; }
+  .tab { padding:10px 18px; font-size:12px; font-weight:600; color:var(--text2); cursor:pointer; border-bottom:2px solid transparent; transition:all 0.2s; white-space:nowrap; }
   .tab.active { color:var(--gold); border-bottom-color:var(--gold); }
   .tab:hover { color:var(--text); }
 
-  /* PROGRESS */
+  /* ── PROGRESS ── */
   .progress-bar { background:var(--border); border-radius:4px; height:6px; overflow:hidden; }
   .progress-fill { height:100%; border-radius:4px; transition:width 0.5s; }
 
-  /* AVATAR */
+  /* ── AVATAR ── */
   .avatar { width:32px; height:32px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; flex-shrink:0; }
 
-  /* PRIORITY */
+  /* ── PRIORITY ── */
   .priority-high { color:#f87171; }
   .priority-med { color:#fb923c; }
   .priority-low { color:#4ade80; }
 
-  /* FOLLOWUP */
-  .followup-item { display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--input); border:1px solid var(--border); border-radius:8px; margin-bottom:8px; cursor:pointer; transition:all 0.2s; }
+  /* ── FOLLOW-UP ── */
+  .followup-item { display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--input); border:1px solid var(--border); border-radius:8px; margin-bottom:8px; cursor:pointer; transition:all 0.2s; flex-wrap:wrap; }
   .followup-item:hover { border-color:var(--gold); }
   .followup-date { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--gold); min-width:70px; }
   .followup-overdue { color:var(--red); }
 
-  /* SPEND */
-  .spend-source { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--spend-border); }
+  /* ── SPEND ── */
+  .spend-source { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--spend-border); gap:8px; flex-wrap:wrap; }
   .spend-source:last-child { border-bottom:none; }
-  .spend-bar-wrap { flex:1; margin:0 16px; }
+  .spend-bar-wrap { flex:1; margin:0 16px; min-width:60px; }
   .spend-value { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; }
 
-  /* EMPLOYEE CARD */
+  /* ── EMPLOYEE CARDS ── */
+  .emp-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
   .emp-card { background:var(--input); border:1px solid var(--border); border-radius:12px; padding:16px; text-align:center; transition:all 0.2s; cursor:pointer; }
   .emp-card:hover { border-color:var(--gold); transform:translateY(-3px); }
   .emp-avatar { width:56px; height:56px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:700; color:#fff; }
@@ -310,34 +318,40 @@
   .emp-stat-val { font-size:14px; font-weight:700; font-family:'JetBrains Mono',monospace; color:var(--gold); }
   .emp-stat-lbl { font-size:8px; color:var(--text2); text-transform:uppercase; }
 
-  /* NOTIFICATION DOT */
+  /* ── NOTIFICATION DOT ── */
   .notif { position:relative; }
   .notif::after { content:''; position:absolute; top:3px; right:3px; width:7px; height:7px; background:var(--red); border-radius:50%; border:2px solid var(--navy2); }
 
-  /* LOGIN */
+  /* ── LOGIN ── */
   #login-screen {
     position:fixed; inset:0; background:var(--login-bg);
     display:flex; align-items:center; justify-content:center; z-index:999;
+    padding:20px;
   }
   .login-box {
     background:var(--navy2); border:1px solid var(--border); border-radius:20px;
-    padding:48px 40px; width:380px; text-align:center;
+    padding:48px 40px; width:100%; max-width:380px; text-align:center;
   }
   .login-logo { font-size:28px; font-weight:800; color:var(--gold); letter-spacing:2px; margin-bottom:4px; }
   .login-tagline { font-size:11px; color:var(--text2); letter-spacing:2px; text-transform:uppercase; margin-bottom:32px; }
   .login-box .form-group { text-align:left; }
-  .login-select { display:flex; gap:8px; margin-bottom:24px; }
-  .role-btn { flex:1; padding:8px; border:1px solid var(--border); background:none; color:var(--text2); border-radius:8px; font-family:'Sora',sans-serif; font-size:11px; cursor:pointer; transition:all 0.2s; }
+  .login-select { display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+  .role-btn { flex:1; min-width:70px; padding:8px; border:1px solid var(--border); background:none; color:var(--text2); border-radius:8px; font-family:'Sora',sans-serif; font-size:11px; cursor:pointer; transition:all 0.2s; }
   .role-btn.active { border-color:var(--gold); color:var(--gold); background:rgba(201,162,39,0.1); }
 
-  /* TOOLTIP */
-  [title] { cursor:help; }
-
-  /* SCROLLBAR */
+  /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width:6px; height:6px; }
   ::-webkit-scrollbar-track { background:var(--navy); }
   ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
   ::-webkit-scrollbar-thumb:hover { background:var(--navy3); }
+
+  /* ── LEADS FILTER BAR ── */
+  .leads-filter-bar { display:flex; gap:12px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+  .leads-filter-bar .search-bar { flex:1; min-width:180px; }
+  .filter-select {
+    background:var(--input); border:1px solid var(--border); border-radius:8px;
+    padding:8px 14px; color:var(--text); font-family:'Sora',sans-serif; font-size:12px;
+  }
 
   /* ── LIGHT MODE OVERRIDES ── */
   body.light #sidebar { background:#ffffff; border-right-color:#e2e8f0; }
@@ -373,10 +387,155 @@
   body.light .notif::after { border-color:#ffffff; }
   body.light tr:hover td { background:rgba(184,134,11,0.05); }
 
-  /* RESPONSIVE fix */
-  @media(max-width:1200px) {
+  /* ══════════════════════════════════════
+     RESPONSIVE BREAKPOINTS
+  ══════════════════════════════════════ */
+
+  /* ── LARGE TABLET (≤1200px) ── */
+  @media (max-width:1200px) {
     .stats-grid { grid-template-columns:repeat(2,1fr); }
     .pipeline { grid-template-columns:repeat(3,1fr); }
+    .emp-grid { grid-template-columns:repeat(3,1fr); }
+  }
+
+  /* ── TABLET (≤1024px) ── */
+  @media (max-width:1024px) {
+    :root { --sidebar-w: 200px; }
+    .stats-grid { grid-template-columns:repeat(2,1fr); }
+    .grid2 { grid-template-columns:1fr; }
+    .form-grid { grid-template-columns:1fr 1fr; }
+    .page { padding:20px; }
+    .topbar { padding:12px 20px; }
+    .emp-grid { grid-template-columns:repeat(2,1fr); }
+  }
+
+  /* ── TABLET PORTRAIT / LARGE MOBILE (≤768px) ── */
+  @media (max-width:768px) {
+    /* Sidebar hidden off-screen */
+    #sidebar {
+      transform:translateX(-100%);
+      width:260px;
+      z-index:200;
+    }
+    #sidebar.open { transform:translateX(0); }
+
+    /* Main takes full width */
+    #main { margin-left:0; }
+
+    /* Show hamburger */
+    .hamburger { display:flex; }
+
+    /* Topbar adjustments */
+    .topbar { padding:12px 16px; gap:8px; }
+    .topbar-title { font-size:15px; }
+    .search-bar { display:none; }
+    .theme-toggle-wrap { display:none; }
+
+    /* Pages */
+    .page { padding:16px; }
+
+    /* Stats: 2 columns */
+    .stats-grid { grid-template-columns:repeat(2,1fr); gap:12px; }
+    .stat-value { font-size:24px; }
+    .stat-icon { font-size:28px; }
+
+    /* Grids collapse */
+    .grid2 { grid-template-columns:1fr; }
+    .grid3 { grid-template-columns:1fr 1fr; }
+
+    /* Pipeline scrolls horizontally */
+    .pipeline {
+      grid-template-columns:repeat(6,160px);
+      overflow-x:auto;
+      padding-bottom:8px;
+    }
+
+    /* Employee grid: 2 col */
+    .emp-grid { grid-template-columns:repeat(2,1fr); }
+
+    /* Follow-up page stats */
+    #page-followups .stats-grid { grid-template-columns:repeat(2,1fr); }
+    #page-applications .stats-grid { grid-template-columns:repeat(2,1fr); }
+
+    /* Form grid: single col on modal */
+    .modal .form-grid { grid-template-columns:1fr; }
+
+    /* Leads filter */
+    .leads-filter-bar { gap:8px; }
+    .filter-select { width:100%; }
+
+    /* Login box padding */
+    .login-box { padding:32px 24px; }
+  }
+
+  /* ── MOBILE (≤480px) ── */
+  @media (max-width:480px) {
+    /* Stats: single column */
+    .stats-grid { grid-template-columns:1fr 1fr; gap:10px; }
+    .stat-card { padding:14px; }
+    .stat-value { font-size:22px; }
+    .stat-label { font-size:10px; }
+    .stat-icon { font-size:24px; right:10px; }
+
+    /* Full width grids */
+    .grid2 { grid-template-columns:1fr; }
+    .grid3 { grid-template-columns:1fr; }
+    .emp-grid { grid-template-columns:1fr 1fr; gap:10px; }
+
+    /* Pages */
+    .page { padding:12px; }
+
+    /* Topbar */
+    .topbar { padding:10px 12px; }
+    .topbar-title { font-size:14px; }
+    .topbar-right { gap:8px; }
+
+    /* Cards */
+    .card { padding:14px; }
+    .card-title { font-size:13px; }
+
+    /* Form grid: single col */
+    .form-grid { grid-template-columns:1fr; }
+
+    /* Donut chart wraps */
+    .donut-wrap { flex-direction:column; align-items:flex-start; }
+
+    /* Follow-ups */
+    .followup-item { flex-direction:column; gap:6px; }
+    .followup-date { min-width:auto; }
+
+    /* Spend source */
+    .spend-source { flex-direction:column; align-items:flex-start; }
+    .spend-bar-wrap { margin:4px 0; width:100%; }
+
+    /* Tabs scroll */
+    .tabs { flex-wrap:nowrap; overflow-x:auto; }
+    .tab { font-size:11px; padding:8px 14px; }
+
+    /* Pipeline mobile scroll */
+    .pipeline {
+      grid-template-columns:repeat(6,140px);
+      overflow-x:auto;
+      padding-bottom:8px;
+      gap:8px;
+    }
+
+    /* Topbar add lead btn */
+    .btn-primary { padding:7px 12px; font-size:11px; }
+    .topbar-btn { padding:6px 10px; font-size:11px; }
+
+    /* Login */
+    .login-box { padding:28px 20px; border-radius:16px; }
+    .login-logo { font-size:24px; }
+    .login-select { gap:6px; }
+    .role-btn { font-size:10px; padding:7px 4px; }
+  }
+
+  /* ── VERY SMALL (≤360px) ── */
+  @media (max-width:360px) {
+    .stats-grid { grid-template-columns:1fr; }
+    .emp-grid { grid-template-columns:1fr; }
+    .login-box { padding:24px 16px; }
   }
 </style>
 </head>
@@ -405,6 +564,9 @@
     <p style="font-size:10px;color:var(--text2);margin-top:16px">SBEC Education Consultancy · Hyderabad, Telangana</p>
   </div>
 </div>
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
 <!-- SIDEBAR -->
 <div id="sidebar">
@@ -445,7 +607,12 @@
 <div id="main">
   <!-- TOPBAR -->
   <div class="topbar">
-    <div class="topbar-title" id="page-title">Dashboard</div>
+    <div class="topbar-left">
+      <button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar-title" id="page-title">Dashboard</div>
+    </div>
     <div class="topbar-right">
       <div class="search-bar">
         <span>🔍</span>
@@ -518,13 +685,13 @@
       <div class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">Monthly Leads & Conversions</div>
+            <div class="card-title">Monthly Leads &amp; Conversions</div>
             <div class="card-subtitle">Last 8 months performance</div>
           </div>
         </div>
         <div class="mini-bar" id="leads-chart"></div>
         <div class="bar-labels" id="leads-chart-labels"></div>
-        <div style="display:flex;gap:16px;margin-top:12px;font-size:10px">
+        <div style="display:flex;gap:16px;margin-top:12px;font-size:10px;flex-wrap:wrap">
           <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--gold);display:inline-block"></span> Leads</span>
           <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--teal2);display:inline-block"></span> Converted</span>
         </div>
@@ -546,7 +713,7 @@
             <text x="60" y="65" text-anchor="middle" fill="#e2e8f0" font-size="11" font-family="JetBrains Mono">148</text>
           </svg>
           <div class="donut-legend">
-            <div class="donut-item"><div class="donut-dot" style="background:#c9a227"></div> Facebook Ads <strong style="margin-left:auto;margin-right:0;font-family:JetBrains Mono;font-size:11px">40%</strong></div>
+            <div class="donut-item"><div class="donut-dot" style="background:#c9a227"></div> Facebook Ads <strong style="margin-left:auto;font-family:JetBrains Mono;font-size:11px">40%</strong></div>
             <div class="donut-item"><div class="donut-dot" style="background:#0d9488"></div> Google Ads <strong style="margin-left:auto;font-family:JetBrains Mono;font-size:11px">24%</strong></div>
             <div class="donut-item"><div class="donut-dot" style="background:#7c3aed"></div> WhatsApp/Referral <strong style="margin-left:auto;font-family:JetBrains Mono;font-size:11px">16%</strong></div>
             <div class="donut-item"><div class="donut-dot" style="background:#ea580c"></div> Walk-in <strong style="margin-left:auto;font-family:JetBrains Mono;font-size:11px">12%</strong></div>
@@ -575,12 +742,12 @@
 
   <!-- LEADS PAGE -->
   <div class="page" id="page-leads">
-    <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
-      <div class="search-bar" style="flex:1;max-width:300px">
+    <div class="leads-filter-bar">
+      <div class="search-bar" style="flex:1;min-width:160px">
         <span>🔍</span>
-        <input type="text" placeholder="Search leads..." oninput="filterLeads(this.value)" id="lead-search">
+        <input type="text" placeholder="Search leads..." oninput="filterLeads(this.value)" id="lead-search" style="width:100%">
       </div>
-      <select class="form-group" style="margin:0;background:var(--input);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--text);font-family:Sora,sans-serif;font-size:12px" onchange="filterLeadsByStatus(this.value)">
+      <select class="filter-select" onchange="filterLeadsByStatus(this.value)">
         <option value="">All Status</option>
         <option value="new">New</option>
         <option value="contacted">Contacted</option>
@@ -589,7 +756,7 @@
         <option value="converted">Converted</option>
         <option value="lost">Lost</option>
       </select>
-      <select class="form-group" style="margin:0;background:var(--input);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--text);font-family:Sora,sans-serif;font-size:12px" onchange="filterLeadsBySource(this.value)">
+      <select class="filter-select" onchange="filterLeadsBySource(this.value)">
         <option value="">All Sources</option>
         <option value="Facebook">Facebook</option>
         <option value="Google">Google</option>
@@ -601,28 +768,30 @@
       <button class="topbar-btn" onclick="exportLeads()">⬇ Export</button>
     </div>
     <div class="card" style="padding:0;overflow:hidden">
-      <table id="leads-table">
-        <thead>
-          <tr>
-            <th>Student</th>
-            <th>Course Interest</th>
-            <th>University</th>
-            <th>Source</th>
-            <th>Assigned To</th>
-            <th>Status</th>
-            <th>Last Contact</th>
-            <th>Next Follow-up</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="leads-tbody"></tbody>
-      </table>
+      <div class="table-wrap">
+        <table id="leads-table">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Course Interest</th>
+              <th>University</th>
+              <th>Source</th>
+              <th>Assigned To</th>
+              <th>Status</th>
+              <th>Last Contact</th>
+              <th>Next Follow-up</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="leads-tbody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
   <!-- PIPELINE PAGE -->
   <div class="page" id="page-pipeline">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
       <div>
         <div style="font-size:16px;font-weight:700">Lead Pipeline</div>
         <div style="font-size:12px;color:var(--text2);margin-top:2px">Drag leads across stages to update status</div>
@@ -657,15 +826,13 @@
           <div id="upcoming-fu"></div>
         </div>
         <div class="card">
-          <div class="card-header">
-            <div class="card-title">📝 Schedule Follow-up</div>
-          </div>
+          <div class="card-header"><div class="card-title">📝 Schedule Follow-up</div></div>
           <div class="form-group">
             <label>Select Lead</label>
             <select id="fu-lead-select"><option>Loading...</option></select>
           </div>
           <div class="form-grid">
-            <div class="form-group"><label>Date & Time</label><input type="datetime-local" id="fu-datetime"></div>
+            <div class="form-group"><label>Date &amp; Time</label><input type="datetime-local" id="fu-datetime"></div>
             <div class="form-group">
               <label>Type</label>
               <select id="fu-type">
@@ -693,21 +860,23 @@
         <div class="card-title">All Applications</div>
         <button class="btn-primary" onclick="openAddApp()">+ New Application</button>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Student</th>
-            <th>University</th>
-            <th>Course</th>
-            <th>Intake</th>
-            <th>Stage</th>
-            <th>Counselor</th>
-            <th>Last Updated</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="app-tbody"></tbody>
-      </table>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>University</th>
+              <th>Course</th>
+              <th>Intake</th>
+              <th>Stage</th>
+              <th>Counselor</th>
+              <th>Last Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="app-tbody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -725,9 +894,7 @@
         <div id="spend-channels"></div>
       </div>
       <div class="card">
-        <div class="card-header">
-          <div class="card-title">Add Spend Entry</div>
-        </div>
+        <div class="card-header"><div class="card-title">Add Spend Entry</div></div>
         <div class="form-group"><label>Channel</label>
           <select id="spend-channel-sel">
             <option>Facebook Ads</option><option>Google Ads</option><option>Instagram Ads</option><option>WhatsApp</option><option>Events/Fairs</option><option>Other</option>
@@ -744,10 +911,12 @@
     </div>
     <div class="card">
       <div class="card-header"><div class="card-title">Spend History</div></div>
-      <table>
-        <thead><tr><th>Date</th><th>Channel</th><th>Amount</th><th>Leads</th><th>CPL</th><th>Notes</th></tr></thead>
-        <tbody id="spend-tbody"></tbody>
-      </table>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Channel</th><th>Amount</th><th>Leads</th><th>CPL</th><th>Notes</th></tr></thead>
+          <tbody id="spend-tbody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -773,16 +942,18 @@
         </div>
         <div class="card">
           <div class="card-title" style="margin-bottom:16px">Top Performing Universities</div>
-          <table>
-            <thead><tr><th>University</th><th>Applications</th><th>Offers</th><th>Rate</th></tr></thead>
-            <tbody>
-              <tr><td>University of Greenwich</td><td>18</td><td>14</td><td><span style="color:#4ade80;font-family:JetBrains Mono">78%</span></td></tr>
-              <tr><td>London Metropolitan</td><td>15</td><td>11</td><td><span style="color:#4ade80;font-family:JetBrains Mono">73%</span></td></tr>
-              <tr><td>Anglia Ruskin</td><td>12</td><td>9</td><td><span style="color:var(--gold2);font-family:JetBrains Mono">75%</span></td></tr>
-              <tr><td>Coventry University</td><td>10</td><td>7</td><td><span style="color:var(--gold2);font-family:JetBrains Mono">70%</span></td></tr>
-              <tr><td>University of Hertfordshire</td><td>8</td><td>5</td><td><span style="color:#fb923c;font-family:JetBrains Mono">63%</span></td></tr>
-            </tbody>
-          </table>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>University</th><th>Applications</th><th>Offers</th><th>Rate</th></tr></thead>
+              <tbody>
+                <tr><td>University of Greenwich</td><td>18</td><td>14</td><td><span style="color:#4ade80;font-family:JetBrains Mono">78%</span></td></tr>
+                <tr><td>London Metropolitan</td><td>15</td><td>11</td><td><span style="color:#4ade80;font-family:JetBrains Mono">73%</span></td></tr>
+                <tr><td>Anglia Ruskin</td><td>12</td><td>9</td><td><span style="color:var(--gold2);font-family:JetBrains Mono">75%</span></td></tr>
+                <tr><td>Coventry University</td><td>10</td><td>7</td><td><span style="color:var(--gold2);font-family:JetBrains Mono">70%</span></td></tr>
+                <tr><td>University of Hertfordshire</td><td>8</td><td>5</td><td><span style="color:#fb923c;font-family:JetBrains Mono">63%</span></td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -790,14 +961,14 @@
 
   <!-- EMPLOYEES PAGE -->
   <div class="page" id="page-employees">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
       <div>
         <div style="font-size:16px;font-weight:700">Team Management</div>
         <div style="font-size:12px;color:var(--text2);margin-top:2px">Role-based access control</div>
       </div>
       <button class="btn-primary admin-only" onclick="openAddEmp()">+ Add Employee</button>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px" id="emp-grid"></div>
+    <div class="emp-grid" id="emp-grid"></div>
   </div>
 
   <!-- SETTINGS PAGE -->
@@ -944,9 +1115,23 @@
 </div>
 
 <!-- TOAST -->
-<div id="toast" style="position:fixed;bottom:32px;right:32px;background:var(--teal);color:#fff;padding:12px 24px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;opacity:0;transform:translateY(20px);transition:all 0.3s"></div>
+<div id="toast" style="position:fixed;bottom:32px;right:32px;background:var(--teal);color:#fff;padding:12px 24px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;opacity:0;transform:translateY(20px);transition:all 0.3s;max-width:calc(100vw - 64px)"></div>
 
 <script>
+// ─────────────────────────────────
+//  SIDEBAR MOBILE CONTROLS
+// ─────────────────────────────────
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
 // ─────────────────────────────────
 //  STATE & DATA
 // ─────────────────────────────────
@@ -1034,13 +1219,13 @@ function doLogin() {
   document.getElementById('sidebar-avatar').textContent = currentUser.initials;
   document.getElementById('sidebar-name').textContent = currentUser.name;
   document.getElementById('sidebar-role').textContent = currentUser.role;
-  // Apply role restrictions
   if (currentRole !== 'admin') {
     document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
   }
-  document.getElementById('login-screen').style.opacity = '0';
-  document.getElementById('login-screen').style.transition = 'opacity 0.4s';
-  setTimeout(() => document.getElementById('login-screen').style.display = 'none', 400);
+  const ls = document.getElementById('login-screen');
+  ls.style.opacity = '0';
+  ls.style.transition = 'opacity 0.4s';
+  setTimeout(() => ls.style.display = 'none', 400);
   initAll();
 }
 
@@ -1061,6 +1246,8 @@ function nav(page) {
   if (page === 'applications') renderApplications();
   if (page === 'employees') renderEmployees();
   if (page === 'reports') renderReports();
+  // Auto-close sidebar on mobile after nav
+  if (window.innerWidth <= 768) closeSidebar();
 }
 
 // ─────────────────────────────────
@@ -1096,8 +1283,8 @@ function renderLeadsTable(data) {
       <td><span style="font-size:10px;padding:2px 8px;border-radius:12px;background:rgba(201,162,39,0.1);color:var(--gold)">${l.source}</span></td>
       <td><div style="font-size:11px">${l.assignTo}</div></td>
       <td>${statusBadge(l.status)}</td>
-      <td style="font-family:JetBrains Mono;font-size:10px;color:var(--text2)">${l.lastContact || '—'}</td>
-      <td style="font-family:JetBrains Mono;font-size:10px;color:${l.nextFollowup ? 'var(--gold)' : 'var(--text2)'}">${l.nextFollowup || '—'}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2)">${l.lastContact || '—'}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:${l.nextFollowup ? 'var(--gold)' : 'var(--text2)'}">${l.nextFollowup || '—'}</td>
       <td>
         <div style="display:flex;gap:6px">
           <button class="topbar-btn" style="padding:4px 10px;font-size:10px" onclick="viewLead(${l.id})">View</button>
@@ -1181,8 +1368,8 @@ function viewLead(id) {
     </div>
     <div>
       <div style="font-size:11px;color:var(--text2);margin-bottom:8px">ADD NOTE / LOG ACTIVITY</div>
-      <div style="display:flex;gap:8px">
-        <input id="new-note-${l.id}" placeholder="Add note or call log..." style="flex:1;background:var(--input);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:Sora,sans-serif;font-size:12px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input id="new-note-${l.id}" placeholder="Add note or call log..." style="flex:1;min-width:150px;background:var(--input);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:Sora,sans-serif;font-size:12px">
         <button class="btn-primary" onclick="addNote(${l.id})">Save</button>
       </div>
     </div>
@@ -1259,11 +1446,11 @@ function renderFollowups() {
   const renderFU = (arr, overdue) => arr.map(f => `
     <div class="followup-item">
       <div class="followup-date ${overdue?'followup-overdue':''}">${f.date.slice(5)}</div>
-      <div style="flex:1">
+      <div style="flex:1;min-width:0">
         <div style="font-size:13px;font-weight:600">${f.lead}</div>
         <div style="font-size:10px;color:var(--text2)">${f.type} · ${f.notes}</div>
       </div>
-      <button class="topbar-btn" style="font-size:10px;padding:4px 10px" onclick="markDone(this,'${f.lead}')">Done</button>
+      <button class="topbar-btn" style="font-size:10px;padding:4px 10px;flex-shrink:0" onclick="markDone(this,'${f.lead}')">Done</button>
     </div>
   `).join('') || '<div style="color:var(--text2);font-size:12px;padding:12px">None</div>';
   document.getElementById('overdue-fu').innerHTML = renderFU(over, true);
@@ -1325,7 +1512,7 @@ function renderApplications() {
       <td><span style="font-size:10px;color:var(--teal2)">${a.intake}</span></td>
       <td>${stageBadge(a.stage)}</td>
       <td style="font-size:11px">${a.counselor}</td>
-      <td style="font-family:JetBrains Mono;font-size:10px;color:var(--text2)">${a.updated}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2)">${a.updated}</td>
       <td><button class="topbar-btn" style="font-size:10px;padding:4px 10px" onclick="updateAppStage(this)">Update</button></td>
     </tr>
   `).join('');
@@ -1344,7 +1531,7 @@ function renderSpend() {
   const colors = ['#c9a227','#0d9488','#7c3aed','#ea580c','#e53935'];
   document.getElementById('spend-channels').innerHTML = Object.entries(channels).map(([ch, amt], i) => `
     <div class="spend-source">
-      <div style="font-size:12px;font-weight:600;min-width:120px">${ch}</div>
+      <div style="font-size:12px;font-weight:600;min-width:100px">${ch}</div>
       <div class="spend-bar-wrap">
         <div class="progress-bar"><div class="progress-fill" style="width:${(amt/total*100).toFixed(0)}%;background:${colors[i%colors.length]}"></div></div>
       </div>
@@ -1353,11 +1540,11 @@ function renderSpend() {
   `).join('');
   document.getElementById('spend-tbody').innerHTML = spendData.map(s => `
     <tr>
-      <td style="font-family:JetBrains Mono;font-size:11px">${s.date}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${s.date}</td>
       <td>${s.channel}</td>
-      <td style="font-family:JetBrains Mono;color:var(--gold)">₹${s.amount.toLocaleString('en-IN')}</td>
-      <td style="font-family:JetBrains Mono">${s.leads}</td>
-      <td style="font-family:JetBrains Mono;color:var(--teal2)">₹${Math.round(s.amount/s.leads)}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:var(--gold)">₹${s.amount.toLocaleString('en-IN')}</td>
+      <td style="font-family:'JetBrains Mono',monospace">${s.leads}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:var(--teal2)">₹${Math.round(s.amount/s.leads)}</td>
       <td style="font-size:11px;color:var(--text2)">${s.notes}</td>
     </tr>
   `).join('');
@@ -1424,11 +1611,11 @@ function renderReports() {
     { label:'Applied', val:42, pct:28 },
     { label:'Converted', val:34, pct:23 },
   ];
-  document.getElementById('funnel-chart').innerHTML = funnel.map((f,i) => `
+  document.getElementById('funnel-chart').innerHTML = funnel.map(f => `
     <div style="margin-bottom:10px">
       <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
         <span>${f.label}</span>
-        <span style="font-family:JetBrains Mono;color:var(--gold)">${f.val} (${f.pct}%)</span>
+        <span style="font-family:'JetBrains Mono',monospace;color:var(--gold)">${f.val} (${f.pct}%)</span>
       </div>
       <div class="progress-bar"><div class="progress-fill" style="width:${f.pct}%;background:linear-gradient(to right,var(--gold),var(--teal2))"></div></div>
     </div>
@@ -1502,17 +1689,12 @@ function toast(msg) {
 //  THEME TOGGLE
 // ─────────────────────────────────
 function setTheme(mode) {
-  if (mode === 'light') {
-    document.body.classList.add('light');
-  } else {
-    document.body.classList.remove('light');
-  }
-  // Persist preference
+  if (mode === 'light') document.body.classList.add('light');
+  else document.body.classList.remove('light');
   localStorage.setItem('sbec-theme', mode);
   toast(mode === 'light' ? '☀️ Light mode activated' : '🌙 Dark mode activated');
 }
 
-// Load saved theme on startup
 (function() {
   const saved = localStorage.getItem('sbec-theme');
   if (saved === 'light') document.body.classList.add('light');
